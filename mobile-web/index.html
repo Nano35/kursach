@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Случайный Выбор">
+  <title>🎲 Случайный Выбор</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 15px;
+      color: #333;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 26px;
+      margin-bottom: 5px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header p {
+      color: #999;
+      font-size: 14px;
+    }
+    
+    .settings {
+      background: white;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .settings-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 5px 0;
+    }
+    
+    .settings-content {
+      margin-top: 15px;
+      display: none;
+    }
+    
+    .settings-content.active {
+      display: block;
+    }
+    
+    .settings input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .input-group input {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+    
+    .btn:active {
+      transform: scale(0.95);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+      padding: 8px 15px;
+      font-size: 14px;
+    }
+    
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+    
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: #f8f9fa;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .list-item:active {
+      background: #e9ecef;
+      transform: scale(0.98);
+    }
+    
+    .list-item-content {
+      flex: 1;
+    }
+    
+    .list-item-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    
+    .choice-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+    
+    .choice-number {
+      background: #667eea;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: 12px;
+    }
+    
+    .result-box {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      margin-top: 15px;
+      animation: slideIn 0.5s ease-out;
+      box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+    }
+    
+    .result-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    
+    .result-text {
+      font-size: 24px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+    
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .badge {
+      background: #667eea;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 14px;
+      z-index: 1000;
+      animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎲 Случайный Выбор</h1>
+      <p>Мобильная веб-версия</p>
+    </div>
+    
+    <!-- Настройки -->
+    <div class="settings">
+      <div class="settings-toggle" onclick="toggleSettings()">
+        <span><strong>⚙️ Настройки API</strong></span>
+        <span id="settingsArrow">▼</span>
+      </div>
+      <div class="settings-content" id="settingsContent">
+        <input type="text" id="apiUrl" placeholder="http://localhost:8000">
+        <button class="btn btn-primary" style="width: 100%;" onclick="saveSettings()">💾 Сохранить</button>
+        <p style="font-size: 12px; color: #999; margin-top: 10px;">
+          💡 Укажите IP вашего компьютера для доступа с телефона<br>
+          Например: http://192.168.1.100:8000
+        </p>
+      </div>
+    </div>
+    
+    <!-- Главный экран -->
+    <div id="homeScreen">
+      <div class="card">
+        <div class="input-group">
+          <input type="text" id="listName" placeholder="Название списка...">
+          <button class="btn btn-primary" onclick="addList()">➕</button>
+        </div>
+      </div>
+      
+      <div id="listsContainer"></div>
+    </div>
+    
+    <!-- Экран деталей -->
+    <div id="detailScreen" class="hidden">
+      <div class="card">
+        <button class="btn btn-secondary" style="margin-bottom: 15px;" onclick="goBack()">← Назад</button>
+        <h2 id="detailTitle" style="margin-bottom: 15px;"></h2>
+        
+        <div class="input-group">
+          <input type="text" id="choiceText" placeholder="Новый вариант...">
+          <button class="btn btn-primary" onclick="addChoice()">➕</button>
+        </div>
+        
+        <button class="btn btn-success" onclick="pickRandom()">
+          🎲 Случайный Выбор
+        </button>
+        
+        <div id="choicesContainer"></div>
+        <div id="resultBox"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const DEFAULT_API = 'http://localhost:8000';
+    let API_URL = localStorage.getItem('apiUrl') || DEFAULT_API;
+    let currentListId = null;
+    let currentListName = null;
+    
+    // Инициализация
+    document.getElementById('apiUrl').value = API_URL;
+    
+    // Настройки
+    function toggleSettings() {
+      const content = document.getElementById('settingsContent');
+      const arrow = document.getElementById('settingsArrow');
+      content.classList.toggle('active');
+      arrow.textContent = content.classList.contains('active') ? '▲' : '▼';
+    }
+    
+    function saveSettings() {
+      API_URL = document.getElementById('apiUrl').value.trim() || DEFAULT_API;
+      localStorage.setItem('apiUrl', API_URL);
+      showToast('✅ URL сохранён!');
+      toggleSettings();
+      loadLists();
+    }
+    
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+    
+    // API запросы
+    async function api(path, options = {}) {
+      return await fetch(API_URL + path, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers
+        }
+      });
+    }
+    
+    // Главный экран
+    async function loadLists() {
+      const container = document.getElementById('listsContainer');
+      container.innerHTML = '<div class="card"><div class="loading"><div class="spinner"></div></div></div>';
+      
+      try {
+        const response = await api('/lists');
+        if (!response.ok) throw new Error('Ошибка сервера');
+        
+        const lists = await response.json();
+        
+        if (lists.length === 0) {
+          container.innerHTML = `
+            <div class="card">
+              <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <p><strong>Нет списков</strong></p>
+                <p style="font-size: 14px; margin-top: 5px;">Создайте первый список выше</p>
+              </div>
+            </div>
+          `;
+          return;
+        }
+        
+        container.innerHTML = lists.map((list, index) => `
+          <div class="list-item" onclick="openList(${list.id}, '${escapeHtml(list.name)}')">
+            <div class="list-item-content">
+              <div class="list-item-title">${escapeHtml(list.name)}</div>
+              <div style="font-size: 12px; color: #999;">ID: ${list.id}</div>
+            </div>
+            <button class="btn btn-danger" onclick="deleteList(event, ${list.id})">🗑️</button>
+          </div>
+        `).join('');
+        
+      } catch (error) {
+        container.innerHTML = `
+          <div class="card" style="background: #ffebee; color: #c62828;">
+            <p><strong>❌ Ошибка подключения</strong></p>
+            <p style="font-size: 14px; margin-top: 10px;">${error.message}</p>
+            <p style="font-size: 12px; margin-top: 10px; color: #e57373;">
+              Проверьте:<br>
+              1. Запущен ли backend сервер<br>
+              2. Правильный ли API URL в настройках<br>
+              3. Доступен ли сервер с вашего устройства
+            </p>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="toggleSettings()">
+              ⚙️ Открыть настройки
+            </button>
+          </div>
+        `;
+      }
+    }
+    
+    async function addList() {
+      const input = document.getElementById('listName');
+      const name = input.value.trim();
+      if (!name) {
+        showToast('⚠️ Введите название');
+        return;
+      }
+      
+      try {
+        const response = await api('/lists', {
+          method: 'POST',
+          body: JSON.stringify({ name })
+        });
+        
+        if (!response.ok) throw new Error('Ошибка создания');
+        
+        input.value = '';
+        loadLists();
+        showToast('✅ Список создан!');
+      } catch (error) {
+        showToast('❌ ' + error.message);
+      }
+    }
+    
+    async function deleteList(event, id) {
+      event.stopPropagation();
+      if (!confirm('❓ Удалить список?')) return;
+      
+      try {
+        await api(`/lists/${id}`, { method: 'DELETE' });
+        loadLists();
+        showToast('✅ Список удалён');
+      } catch (error) {
+        showToast('❌ ' + error.message);
+      }
+    }
+    
+    // Экран деталей
+    function openList(id, name) {
+      currentListId = id;
+      currentListName = name;
+      document.getElementById('homeScreen').classList.add('hidden');
+      document.getElementById('detailScreen').classList.remove('hidden');
+      document.getElementById('detailTitle').textContent = name;
+      document.getElementById('resultBox').innerHTML = '';
+      loadChoices();
+    }
+    
+    function goBack() {
+      document.getElementById('homeScreen').classList.remove('hidden');
+      document.getElementById('detailScreen').classList.add('hidden');
+      loadLists();
+    }
+    
+    async function loadChoices() {
+      const container = document.getElementById('choicesContainer');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+      
+      try {
+        const response = await api(`/lists/${currentListId}/choices`);
+        if (!response.ok) throw new Error('Ошибка загрузки');
+        
+        const choices = await response.json();
+        
+        if (choices.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">📦</div>
+              <p><strong>Нет вариантов</strong></p>
+              <p style="font-size: 14px; margin-top: 5px;">Добавьте варианты для выбора</p>
+            </div>
+          `;
+          return;
+        }
+        
+        container.innerHTML = choices.map((choice, index) => `
+          <div class="choice-item">
+            <div style="display: flex; align-items: center; flex: 1;">
+              <div class="choice-number">${index + 1}</div>
+              <span>${escapeHtml(choice.text)}</span>
+            </div>
+            <button class="btn btn-danger" onclick="deleteChoice(${choice.id})">🗑️</button>
+          </div>
+        `).join('');
+        
+      } catch (error) {
+        container.innerHTML = `
+          <div class="empty-state" style="color: #c62828;">
+            <p>❌ ${error.message}</p>
+          </div>
+        `;
+      }
+    }
+    
+    async function addChoice() {
+      const input = document.getElementById('choiceText');
+      const text = input.value.trim();
+      if (!text) {
+        showToast('⚠️ Введите вариант');
+        return;
+      }
+      
+      try {
+        const response = await api(`/lists/${currentListId}/choices`, {
+          method: 'POST',
+          body: JSON.stringify({ text })
+        });
+        
+        if (!response.ok) throw new Error('Ошибка добавления');
+        
+        input.value = '';
+        loadChoices();
+        showToast('✅ Вариант добавлен!');
+      } catch (error) {
+        showToast('❌ ' + error.message);
+      }
+    }
+    
+    async function deleteChoice(id) {
+      if (!confirm('❓ Удалить вариант?')) return;
+      
+      try {
+        await api(`/choices/${id}`, { method: 'DELETE' });
+        loadChoices();
+        document.getElementById('resultBox').innerHTML = '';
+        showToast('✅ Вариант удалён');
+      } catch (error) {
+        showToast('❌ ' + error.message);
+      }
+    }
+    
+    async function pickRandom() {
+      const resultBox = document.getElementById('resultBox');
+      const btn = event.target;
+      
+      btn.disabled = true;
+      btn.textContent = '🔄 Выбираю...';
+      resultBox.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+      
+      // Анимация ожидания
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      try {
+        const response = await api(`/lists/${currentListId}/pick`, {
+          method: 'POST'
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          resultBox.innerHTML = `
+            <div class="result-box">
+              <div class="result-icon">🎯</div>
+              <div style="font-size: 18px;">Выбрано:</div>
+              <div class="result-text">${escapeHtml(result.text)}</div>
+            </div>
+          `;
+        } else {
+          const error = await response.json();
+          resultBox.innerHTML = `
+            <div class="result-box" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);">
+              <div class="result-icon">❌</div>
+              <div class="result-text">${error.detail}</div>
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultBox.innerHTML = `
+          <div class="result-box" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);">
+            <div class="result-icon">❌</div>
+            <div class="result-text">Ошибка: ${error.message}</div>
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🎲 Случайный Выбор';
+      }
+    }
+    
+    // Вспомогательные функции
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Инициализация
+    loadLists();
+  </script>
+</body>
+</html>

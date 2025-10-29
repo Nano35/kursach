@@ -1,0 +1,44 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Случайный Выбор — Web</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Случайный Выбор (Web)</h1>
+    <div class="config">
+      <label>API URL: <input id="apiBase" value="http://192.168.0.108:8000"></label>
+      <button id="reload">Обновить</button>
+    </div>
+    <div class="new-list">
+      <input id="listName" placeholder="Название списка" />
+      <button id="addList">Добавить список</button>
+    </div>
+    <div id="lists"></div>
+  </div>
+
+  <template id="listTpl">
+    <div class="list">
+      <div class="list-header">
+        <h3 class="title"></h3>
+        <div class="actions">
+          <button class="btn-pick">Случайный выбор</button>
+          <button class="btn-delete">Удалить</button>
+        </div>
+      </div>
+      <div class="add-choice">
+        <input class="choiceText" placeholder="Новый вариант..." />
+        <button class="btn-add-choice">Добавить</button>
+      </div>
+      <ul class="choices"></ul>
+      <div class="result"></div>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
