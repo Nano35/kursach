@@ -1,4 +1,5 @@
-Случайный Выбор — полный шаблон (Flutter + JS Web + FastAPI + SQLite)
+Случайный Выбор 
+(Flutter + JS Web + FastAPI + SQLite)
 
 Архитектура
 - **Backend (FastAPI, SQLite)**: `backend/`
@@ -19,7 +20,7 @@ API поднимется на `http://127.0.0.1:8000`.
 ````markdown
 # Случайный Выбор — как запустить локально
 
-Небольшая заметка и шаги для быстрой проверки проекта в локальной сети (подойдёт для демонстрации/защиты).
+Небольшая заметка и шаги для быстрой проверки проекта в локальной сети.
 
 Структура
 - backend/ — FastAPI + SQLite
@@ -65,13 +66,6 @@ cd E:\.mcp-project\random_choice_app
 2. Узнайте IPv4 компьютера: в PowerShell `ipconfig` → раздел адаптера Wi‑Fi → `IPv4 Address`, например `192.168.0.108`.
 3. В приложении (или в `frontend-web/index.html`) укажите API URL `http://192.168.0.108:8000`.
 4. Откройте на телефоне `http://192.168.0.108:8000/health` — должен быть ответ.
-
-Если не доступно — проверьте брандмауэр Windows (разрешите порт 8000):
-
-```powershell
-# Запустить PowerShell от администратора
-netsh advfirewall firewall add rule name="Allow 8000" dir=in action=allow protocol=TCP localport=8000
-```
 
 Веб-версия
 - Откройте `frontend-web/index.html` в браузере. В поле `API URL` укажите `http://192.168.0.108:8000`.
